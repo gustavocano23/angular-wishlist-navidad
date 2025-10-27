@@ -1,0 +1,193 @@
+<section class="wl">
+   <div class="xmas-lights" aria-hidden="true">
+    <ul class="xmas-lights__string">
+      <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+      <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+      <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+      <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
+  </div>
+  
+  <!-- Nieve -->
+  <div class="snow snow--layer1" aria-hidden="true"></div>  
+  <div class="snow snow--layer2" aria-hidden="true"></div>
+  <div class="snow snow--layer3" aria-hidden="true"></div>
+<div class="snow snow--layer1" aria-hidden="true"></div>
+  <div class="snow snow--layer2" aria-hidden="true"></div>
+  <div class="snow snow--layer3" aria-hidden="true"></div>
+<div class="snow snow--layer1" aria-hidden="true"></div>
+  <div class="snow snow--layer2" aria-hidden="true"></div>
+  <div class="snow snow--layer3" aria-hidden="true"></div>
+  <!-- Héroe -->
+  <header class="wl-hero">
+    <div class="wl-hero__content">
+      <div class="wl-hero__title">
+        <svg class="wl-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2l2.39 4.84L20 8l-4 3.89L17 18l-5-2.62L7 18l1-6.11L4 8l5.61-1.16L12 2z"></path>
+        </svg>
+        <h1>Lista de Regalos</h1>
+      </div>
+      <p class="wl-hero__subtitle">Explora y edita las listas de regalos de la comunidad 🎄✨</p>
+
+      <!-- Barra de acciones global (decorativa) -->
+      <div class="wl-toolbar" role="toolbar" aria-label="Acciones generales">
+      </div>
+    </div>
+  </header>
+
+  <!-- Grid -->
+  <!-- ... (tu cabecera/hero y nieve igual que ya lo tienes) ... -->
+
+  <div class="wl-grid" style="margin-bottom: 100px;">
+    @for (item of wishlists(); track item._id ?? $index) {
+      <article class="wl-card">
+
+
+        <!-- 🚫 Header restaurado tal cual lo tenías -->
+        <header class="wl-card__header">
+          <img class="wl-card__avatar" src="https://i.pinimg.com/originals/38/7a/77/387a7722facf40fe17ba74ad70ace485.jpg" alt="Avatar de Ana López" />
+          <div class="wl-card__user">
+            <h2 class="wl-card__user-name">{{item.userName}}</h2>
+            <span class="wl-card__meta">“Navidad Tech 2025”</span>
+          </div>
+          
+        </header>
+
+        <ul class="wl-card__list">
+          @for (gift of item.regalos; track $index) {
+            <li class="wl-item">
+              <div class="wl-item__left">
+                @if (uis[item._id]?.editingIndex === $index) {
+                  <!-- MODO EDICIÓN (estado por card) -->
+                  <input
+                    class="wl-input"
+                    type="text"
+                    [placeholder]="'Editar regalo...'"
+                    [ngModel]="uis[item._id]?.editName ?? ''"
+                    (ngModelChange)="updateEditName(item._id, $event)"
+                    (keyup.enter)="saveEdit(item._id, $index, $index)"
+                    aria-label="Editar nombre del regalo"
+                  />
+                } @else {
+                  <!-- MODO LECTURA -->
+                  <span class="wl-item__name" [attr.title]="gift.Name">
+                    {{ gift.Name }}
+                  </span>
+                }
+              </div>
+
+              <div class="wl-item__actions">
+                @if (uis[item._id]?.editingIndex === $index) {
+                  <button class="pill-btn pill-btn--save" type="button" (click)="saveEdit(item._id, $index, $index)">
+                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                  </button>
+                  <button class="pill-btn pill-btn--ghost" type="button" (click)="cancelEdit(item._id)">
+                    <svg viewBox="0 0 24 24"><path d="M18.3 5.71L12 12l6.3 6.29-1.41 1.42L10.59 13.41 4.29 19.71 2.88 18.3 9.17 12 2.88 5.71 4.29 4.29l6.3 6.3 6.29-6.3z"/></svg>
+                  </button>
+                } @else {
+                  <button class="pill-btn pill-btn--edit" type="button"
+                          (click)="startEdit(item._id, $index, gift.Name)">
+                    <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>
+                  </button>
+                  <button class="pill-btn pill-btn--danger" type="button" (click)="deleteGift(item._id, $index)">
+                    <svg viewBox="0 0 24 24"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zm3.46-9h1.08v8H9.46V10zm4 0h1.08v8h-1.08V10zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                  </button>
+                }
+              </div>
+            </li>
+          }
+
+          <!-- FILA DE NUEVO REGALO (por card) -->
+          @if (uis[item._id]?.adding) {
+            <li class="wl-item wl-item--editor">
+              <div class="wl-item__left">
+                <input
+                  class="wl-input"
+                  type="text"
+                  [placeholder]="'Escribe un regalo nuevo...'"
+                  [ngModel]="uis[item._id]?.newGiftName ?? ''"
+                  (ngModelChange)="updateNewGiftName(item._id, $event)"
+                  (keyup.enter)="saveNew(item._id)"
+                  aria-label="Nombre del nuevo regalo"
+                  autofocus
+                />
+              </div>
+              <div class="wl-item__actions">
+                <button class="pill-btn pill-btn--save" type="button" (click)="saveNew(item._id)">
+                  <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                </button>
+                <button class="pill-btn pill-btn--ghost" type="button" (click)="cancelAdd(item._id)">
+                  <svg viewBox="0 0 24 24"><path d="M18.3 5.71L12 12l6.3 6.29-1.41 1.42L10.59 13.41 4.29 19.71 2.88 18.3 9.17 12 2.88 5.71 4.29 4.29l6.3 6.3 6.29-6.3z"/></svg>
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+
+        <footer class="wl-card__footer">
+          <div class="wl-footer-actions">
+            <button class="btn btn--ghost btn--with-icon" type="button" (click)="toggleAdd(item._id)">
+              <svg viewBox="0 0 24 24"><path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"/></svg>
+              Agregar regalo
+            </button>
+              <!-- 🔄 Actualizar lista: habilitado solo si hubo cambios en ESTA card -->
+          <button
+            class="btn btn--outline btn--with-icon"
+            type="button"
+            (click)="updateWishlistByUser(item._id, $index)"
+            [disabled]="!uis[item._id]?.dirty"
+            [class.is-active]="uis[item._id]?.dirty"
+            title="Enviar cambios al servidor"
+          >
+            <svg viewBox="0 0 24 24"><path d="M12 6v6l4 2M4 12a8 8 0 1 0 16 0"/></svg>
+            Actualizar lista
+          </button>
+          </div>
+        </footer>
+      </article>
+    }
+
+  </div>
+
+<img
+  class="ground-gif"
+  src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgLebF2ROavwtpki49NKOdgffvSz0VPDfw2s8DLxhAGkBMCDQOVWUGiHeq9MCln3-qMrFPCiSHLv2TKWzrfP2vwkjcCfF7PfUHbHW9lCen9OCZNU58rZhxwPpYLfVbHR4feAQ7uPfL8gvM/s1600/54.gif"
+  alt="Santa en trineo"
+/>
+ <!-- Bancos de nieve (al fondo, fijos) -->
+
+<div class="snowbanks-lite" aria-hidden="true"></div>
+</section>
+
+
+<button
+  class="fab {{ isPlaying ? 'on' : 'off' }}"
+  (click)="playMusic()"
+  aria-label="Alternar música navideña"
+  title="Música navideña"
+>
+  <!-- Icono campana / nota musical -->
+  <span class="icon">
+
+  <!-- NOTA MUSICAL cuando está detenido -->
+  <svg *ngIf="isPlaying"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+    <rect x="6" y="4" width="4" height="16" rx="1" />
+    <rect x="14" y="4" width="4" height="16" rx="1" />
+  </svg>
+      <!-- PAUSA cuando está reproduciendo -->
+  <svg *ngIf="!isPlaying"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+      <path d="M9 3v12.563A3.99 3.99 0 0 0 7 15c-2.21 0-4 1.567-4 3.5S4.79 22 7 22s4-1.567 4-3.5V8h6V3H9z"/>
+    
+  </svg>
+  </span>
+
+  <!-- Gorro navideño decorativo -->
+  <span class="hat" aria-hidden="true"></span>
+
+  <!-- Lucecitas / glow cuando está encendido -->
+  <span class="glow" aria-hidden="true"></span>
+</button>

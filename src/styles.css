@@ -1,1 +1,275 @@
-/* You can add global styles to this file, and also import other style files */
+/* ===== Tema ===== */
+*{
+    padding: 0;
+    margin: 0;
+}
+:root{
+  --wl-bg-start:#9b0a27; --wl-bg-end:#c11f3a;
+  --wl-text:#fff; --wl-subtext:#ffe8ef; --wl-stroke:rgba(255,255,255,.18);
+  --wl-gold:#ffd166; --wl-green:#1fbf7a; --wl-deep-green:#0b6b45;
+  --wl-card-glass:rgba(255,255,255,.12); --wl-card-blur:10px;
+  --wl-danger:#ff6b6b; --wl-danger-deep:#a30022; --wl-amber:#ffbf69;
+}
+
+/* ===== Lienzo ===== */
+.wl{
+  position:relative; min-height:100vh; padding:24px 20px 80px; color:var(--wl-text);
+  background:
+   radial-gradient(1200px 600px at 80% -100%, rgba(255,255,255,.15), transparent 60%),
+   linear-gradient(180deg,var(--wl-bg-start),var(--wl-bg-end));
+  overflow-x:hidden; isolation:isolate;
+}
+
+/* ===== Nieve ===== */
+/* --- Nieve full-screen, en TODA la pantalla --- */
+.snow{
+  position: fixed;
+  inset: 0;                 /* ocupa todo el viewport */
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .6;
+  background-repeat: repeat;
+  animation: snowFall linear infinite;
+  will-change: transform;   /* mejora suavidad */
+  /* patrón más grande para evitar “parches” */
+  background-image:
+    radial-gradient(3px 3px at 20px 30px,#fff 55%,transparent 56%),
+    radial-gradient(2px 2px at 80px 120px,#fff 55%,transparent 56%),
+    radial-gradient(2px 2px at 200px 80px,#fff 55%,transparent 56%),
+    radial-gradient(3px 3px at 320px 40px,#fff 55%,transparent 56%),
+    radial-gradient(2px 2px at 440px 100px,#fff 55%,transparent 56%),
+    radial-gradient(3px 3px at 560px 60px,#fff 55%,transparent 56%),
+    radial-gradient(2px 2px at 680px 140px,#fff 55%,transparent 56%);
+  /* cada capa repite en un “mosaico” amplio */
+  background-size: 900px 900px, 1000px 1000px, 1100px 1100px,
+                   1200px 1200px, 1300px 1300px, 1400px 1400px, 1500px 1500px;
+}
+
+/* velocidades distintas por capa */
+.snow--layer1 { animation-duration: 18s; filter: blur(.2px);  opacity:.9; }
+.snow--layer2 { animation-duration: 28s; filter: blur(.6px);  opacity:.60; }
+.snow--layer3 { animation-duration: 42s; filter: blur(1px);   opacity:.85; }
+
+/* recorre más que el viewport para que no “se corte” a mitad */
+@keyframes snowFall{
+  0%   { transform: translateY(-20vh); }
+  100% { transform: translateY(120vh); }
+}
+
+/* ===== Hero ===== */
+.wl-hero{max-width:1200px; margin:0 auto 16px; padding:18px 14px 6px}
+.wl-hero__content{text-align:center}
+.wl-hero__title{display:inline-flex; align-items:center; gap:12px; padding:10px 16px; margin:0 auto 8px;
+  border:1px solid var(--wl-stroke); border-radius:999px;
+  background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35); backdrop-filter:blur(6px);
+}
+.wl-hero__title h1{font-size:clamp(22px,3.4vw,36px); font-weight:800; letter-spacing:.2px}
+.wl-icon{width:24px; height:24px; fill:var(--wl-gold)}
+.wl-hero__subtitle{color:var(--wl-subtext); margin:4px 0 14px; font-size:clamp(14px,1.6vw,16px)}
+
+.wl-toolbar{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; align-items:center}
+.wl-filters{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:8px}
+.chip{border:1px solid var(--wl-stroke); background:rgba(255,255,255,.08); color:var(--wl-text);
+  padding:8px 12px; border-radius:999px; font-size:13px; transition:transform .15s, background .2s; backdrop-filter:blur(4px)}
+.chip:hover{transform:translateY(-1px)}
+.chip--active{background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.08)); box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+
+/* ===== Botones base ===== */
+.btn{display:inline-flex; align-items:center; gap:8px; font-weight:700; letter-spacing:.2px; border-radius:12px;
+  padding:10px 14px; border:1px solid var(--wl-stroke); background:rgba(255,255,255,.08); color:var(--wl-text);
+  transition:transform .15s, background .2s, box-shadow .2s;
+}
+.btn svg{width:18px; height:18px; fill:currentColor}
+.btn--with-icon svg{margin-right:2px}
+.btn:hover{transform:translateY(-1px); background:rgba(255,255,255,.12)}
+.btn--ghost{background:transparent}
+.btn--outline{background:transparent; border:1px solid rgba(255,255,255,.35)}
+.btn--primary{border-color:rgba(255,255,255,.45);
+  background:
+   linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.06)),
+   linear-gradient(90deg, #0ea869, #12c286);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6), 0 6px 18px rgba(0,0,0,.25);
+}
+.btn--primary:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.8), 0 10px 26px rgba(0,0,0,.32)}
+
+/* ===== Grid ===== */
+.wl-grid{position:relative; z-index:1; display:grid; grid-template-columns:repeat(12,1fr);
+  gap:clamp(14px,2.2vw,22px); max-width:1200px; margin:0 auto}
+@media (max-width:600px){.wl-card{grid-column:span 12}}
+@media (min-width:601px){.wl-card{grid-column:span 6}}
+@media (min-width:1024px){.wl-card{grid-column:span 4}}
+
+/* ===== Card ===== */
+.wl-card{
+  position:relative; display:flex; flex-direction:column; gap:12px; padding:16px; border-radius:20px;
+  border:1px solid var(--wl-stroke);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.06) 0 10px, rgba(255,255,255,.03) 10px 20px);
+  box-shadow:0 10px 30px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.35);
+  backdrop-filter:blur(var(--wl-card-blur)); transition:transform .18s, box-shadow .18s;
+  outline: 3px solid transparent;
+  /* Borde "candy cane" suave */
+  border-image: repeating-linear-gradient(45deg, #fff, #fff 8px, #d4002a 8px, #d4002a 16px) 8 / 1 / 0 stretch;
+}
+.wl-card:hover{transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.4)}
+
+/* Cinta */
+.wl-card__ribbon{position:absolute; top:12px; left:-10px; background:linear-gradient(90deg,#fff,#ffe3ea); color:#9b0a27;
+  font-weight:700; padding:6px 12px; border-radius:0 10px 10px 0; box-shadow:0 4px 12px rgba(0,0,0,.25); font-size:12px}
+.wl-card__ribbon--gold{background:linear-gradient(90deg,#ffe29a,#ffd166); color:#7a4d00}
+
+/* Header */
+.wl-card__header{display:grid; grid-template-columns:56px 1fr auto; gap:12px; align-items:center}
+.wl-card__avatar{width:56px; height:56px; border-radius:14px; object-fit:cover; border:2px solid rgba(255,255,255,.6);
+  box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.wl-card__user-name{font-size:16px; font-weight:800; line-height:1.1}
+.wl-card__meta{font-size:12px; color:var(--wl-subtext)}
+.wl-card__actions{display:flex; gap:8px; align-items:center; justify-self:end}
+.icon-btn{display:inline-grid; place-items:center; width:36px; height:36px; border-radius:12px;
+  border:1px solid var(--wl-stroke); background:rgba(255,255,255,.08); transition:transform .15s, background .2s}
+.icon-btn svg{width:18px; height:18px; fill:currentColor}
+.icon-btn:hover{transform:translateY(-1px); background:rgba(255,255,255,.14)}
+
+/* Lista de ítems */
+.wl-card__list{list-style:none; margin:2px 0 4px; padding:0; display:grid; gap:8px}
+.wl-item{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 12px;
+  border:1px dashed rgba(255,255,255,.25); border-radius:12px; background:rgba(255,255,255,.04);
+  position:relative; overflow:hidden;
+}
+/* Lucecitas “twinkle” */
+.wl-item::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:radial-gradient(3px 3px at 10% 50%, rgba(255,255,255,.6) 40%, transparent 41%),
+                   radial-gradient(2px 2px at 80% 20%, rgba(255,255,255,.5) 40%, transparent 41%);
+  opacity:.35; animation:twinkle 2.4s ease-in-out infinite alternate;
+}
+@keyframes twinkle{from{opacity:.15; filter:blur(.2px)} to{opacity:.5; filter:blur(.6px)}}
+
+.wl-item__left{display:flex; align-items:center; flex-wrap:wrap; gap:10px}
+.wl-item__name{font-weight:700; font-size:14px}
+.wl-item__tag{font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.3);
+  background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06))}
+.wl-item__actions{display:flex; gap:8px}
+
+/* Botones por ítem */
+.pill-btn{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px;
+  border:1px solid var(--wl-stroke); background:rgba(255,255,255,.06); font-size:12px; font-weight:700; transition:transform .15s, background .2s}
+.pill-btn svg{width:16px; height:16px; fill:currentColor}
+.pill-btn:hover{transform:translateY(-1px); background:rgba(255,255,255,.12)}
+.pill-btn--edit{color:#422006; border-color:rgba(255,191,105,.5);
+  background:linear-gradient(180deg, rgba(255,191,105,.35), rgba(255,191,105,.15))}
+.pill-btn--danger{color:#fff; border-color:rgba(255,107,107,.45);
+  background:linear-gradient(180deg, rgba(255,107,107,.45), rgba(163,0,34,.55))}
+.pill-btn--danger:hover{box-shadow:0 0 0 2px rgba(255,107,107,.25) inset}
+
+/* Footer de la card */
+.wl-card__footer{margin-top:4px; display:flex; align-items:center; justify-content:space-between}
+.wl-badge{font-size:12px; font-weight:800; color:#133a2d;
+  background:linear-gradient(180deg,#baffdf,#7be9bb); border:1px solid rgba(255,255,255,.4); border-radius:10px; padding:6px 10px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+.wl-footer-actions{display:flex; gap:10px}
+
+/* FAB navideño */
+.fab{
+  position:fixed; right:18px; bottom:18px; z-index:3; width:56px; height:56px; border-radius:16px;
+  border:none; cursor:pointer; display:grid; place-items:center; color:#fff;
+  background:
+    radial-gradient(120% 120% at 10% 5%, rgba(255,255,255,.25), transparent 40%),
+    linear-gradient(180deg, #0ea869, #0b6b45);
+  box-shadow:0 12px 28px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.6);
+  transition:transform .15s ease, box-shadow .2s ease;
+}
+.fab svg{width:22px; height:22px; fill:#fff}
+.fab:hover{transform:translateY(-2px); box-shadow:0 16px 34px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.8)}
+.fab__spark{
+  position:absolute; inset:-6px; border-radius:18px; pointer-events:none;
+  background:conic-gradient(from 0deg, rgba(255,255,255,.2), transparent 40%, rgba(255,255,255,.2));
+  filter:blur(6px); opacity:.35; animation:spin 4s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Asegura que el contenedor permita posicionar el fondo interno */
+.wl {
+  position: relative;
+  /* deja espacio para que no tape el contenido del final */
+  padding-bottom: 18vh;
+}
+
+/* Bancos de nieve mínimos, NO fixed (se quedan al fondo del componente) */
+.snowbanks-lite{
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 18vh;                /* altura discreta */
+  z-index: 1;                  /* debajo del contenido si tu contenido usa z-index:2 */
+  pointer-events: none;
+  margin-top: 40px;
+  /* Muy sutil: sin brillos ni bordes duros */
+  background:
+    /* sombra muy leve para separar del fondo */
+    linear-gradient(to top, rgba(0,0,0,.08), transparent 32%),
+    /* montículos suaves y bajos */
+    radial-gradient(110vh 26vh at 18% 108%, rgba(255,255,255,.9) 72%, transparent 73%),
+    radial-gradient(120vh 28vh at 58% 114%, rgba(255,255,255,.92) 72%, transparent 73%),
+    radial-gradient(100vh 24vh at 92% 110%, rgba(255,255,255,.88) 72%, transparent 73%),
+    /* base blanca muy tenue */
+    linear-gradient(to top, #ffffff, #ffffffee 55%, #ffffffd8 80%, transparent 100%);
+  background-repeat: no-repeat;
+  /* Sin blur ni brillos extra */
+  filter: none;
+  opacity: .95;                /* puedes bajar a .9 si lo querés aún más tenue */
+}
+
+/* 1) Orden de capas (de atrás hacia adelante)
+   - nieve cayendo  : z-index:-1
+   - bancos de nieve: z-index:0
+   - tu UI          : z-index:2
+*/
+.snow, .snow--l1, .snow--l2, .snow--l3 { z-index: -1; }  /* siempre detrás */
+.snowbanks-lite { z-index: 0; }                          /* fondo del componente */
+
+/* 2) Asegurá que TU contenido esté por encima */
+.wl > .wl-hero,
+.wl > .wl-grid,
+.wl > .wl-footer,
+.fab {
+  position: relative;
+  z-index: 2;
+}
+
+/* 3) Espacio al final para que nada se solape */
+.wl {
+  padding-bottom: clamp(14vh, 18vh, 22vh);
+}
+
+/* Evita recortes en la card y en el hat */
+.wl-card { overflow: visible; }
+
+/* Gorro */
+.wl-card__hat{
+  position: absolute;
+  top: -12px;           /* visible sobre la card */
+  left: 8px;
+  width: 56px;          /* tamaño OK como te gustó */
+  height: 56px;
+  display: grid;
+  place-items: center;
+  transform: rotate(-12deg);
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,.25));
+  overflow: visible;    /* importante */
+}
+.wl-card__hat .hat{ width: 100%; height: 100%; overflow: visible; }
+
+.wl-card__hat--featured{
+  filter:
+    drop-shadow(0 6px 12px rgba(0,0,0,.25))
+    drop-shadow(0 0 10px rgba(240,207,131,.45));
+}
+
+/* Opcional: si algún contenedor padre recorta, aseguralo */
+.wl-grid, .wl { overflow: visible; }
